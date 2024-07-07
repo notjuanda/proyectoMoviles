@@ -1,6 +1,6 @@
-// ReservationRepository.kt
 package com.example.restaurantsmoviles.repositories
 
+import android.content.Context
 import com.example.restaurantsmoviles.api.ApiService
 import com.example.restaurantsmoviles.model.Reservation
 import retrofit2.Call
@@ -9,10 +9,10 @@ import retrofit2.Response
 
 object ReservationRepository {
 
-    private val retrofit = RetrofitRepository.getRetrofitInstance()
-    private val service: ApiService = retrofit.create(ApiService::class.java)
+    fun getReservationList(context: Context, success: (List<Reservation>?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
 
-    fun getReservationList(success: (List<Reservation>?) -> Unit, failure: (Throwable) -> Unit) {
         service.getReservations().enqueue(object : Callback<List<Reservation>> {
             override fun onResponse(call: Call<List<Reservation>>, response: Response<List<Reservation>>) {
                 success(response.body())
@@ -24,7 +24,10 @@ object ReservationRepository {
         })
     }
 
-    fun insertReservation(reservation: Reservation, success: (Reservation) -> Unit, failure: (Throwable) -> Unit) {
+    fun insertReservation(context: Context, reservation: Reservation, success: (Reservation) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.insertReservation(reservation).enqueue(object : Callback<Reservation> {
             override fun onResponse(call: Call<Reservation>, response: Response<Reservation>) {
                 response.body()?.let { success(it) } ?: failure(Throwable("Response body is null"))
@@ -36,7 +39,10 @@ object ReservationRepository {
         })
     }
 
-    fun getReservation(id: Int, success: (Reservation?) -> Unit, failure: (Throwable) -> Unit) {
+    fun getReservation(context: Context, id: Int, success: (Reservation?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.getReservation(id).enqueue(object : Callback<Reservation?> {
             override fun onResponse(call: Call<Reservation?>, response: Response<Reservation?>) {
                 success(response.body())
@@ -48,8 +54,11 @@ object ReservationRepository {
         })
     }
 
-    fun updateReservation(reservation: Reservation, success: (Reservation) -> Unit, failure: (Throwable) -> Unit) {
+    fun updateReservation(context: Context, reservation: Reservation, success: (Reservation) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
         val reservationId = reservation.id ?: 0
+
         service.updateReservation(reservation, reservationId).enqueue(object : Callback<Reservation> {
             override fun onResponse(call: Call<Reservation>, response: Response<Reservation>) {
                 response.body()?.let { success(it) } ?: failure(Throwable("Response body is null"))
@@ -61,7 +70,10 @@ object ReservationRepository {
         })
     }
 
-    fun deleteReservation(id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
+    fun deleteReservation(context: Context, id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.deleteReservation(id).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 success()

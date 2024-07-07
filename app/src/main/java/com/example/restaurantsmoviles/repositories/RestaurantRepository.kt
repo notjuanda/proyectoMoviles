@@ -1,5 +1,6 @@
 package com.example.restaurantsmoviles.repositories
 
+import android.content.Context
 import com.example.restaurantsmoviles.api.ApiService
 import com.example.restaurantsmoviles.model.Restaurant
 import retrofit2.Call
@@ -8,11 +9,10 @@ import retrofit2.Response
 
 object RestaurantRepository {
 
-    private val retrofit = RetrofitRepository.getRetrofitInstance()
-    private val service: ApiService = retrofit.create(ApiService::class.java)
+    fun getRestaurantList(context: Context, filters: Map<String, String?>, success: (List<Restaurant>?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
 
-    fun getRestaurantList(success: (List<Restaurant>?) -> Unit, failure: (Throwable) -> Unit) {
-        val filters = mapOf<String, String?>() // Mapa vacío para no filtrar nada
         service.searchRestaurants(filters).enqueue(object : Callback<List<Restaurant>> {
             override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
                 if (response.isSuccessful) {
@@ -28,7 +28,10 @@ object RestaurantRepository {
         })
     }
 
-    fun insertRestaurant(restaurant: Restaurant, success: (Restaurant) -> Unit, failure: (Throwable) -> Unit) {
+    fun insertRestaurant(context: Context, restaurant: Restaurant, success: (Restaurant) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.insertRestaurant(restaurant).enqueue(object : Callback<Restaurant> {
             override fun onResponse(call: Call<Restaurant>, response: Response<Restaurant>) {
                 response.body()?.let { success(it) } ?: failure(Throwable("Response body is null"))
@@ -40,7 +43,10 @@ object RestaurantRepository {
         })
     }
 
-    fun getRestaurant(id: Int, success: (Restaurant?) -> Unit, failure: (Throwable) -> Unit) {
+    fun getRestaurant(context: Context, id: Int, success: (Restaurant?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.getRestaurant(id).enqueue(object : Callback<Restaurant?> {
             override fun onResponse(call: Call<Restaurant?>, response: Response<Restaurant?>) {
                 success(response.body())
@@ -52,8 +58,11 @@ object RestaurantRepository {
         })
     }
 
-    fun updateRestaurant(restaurant: Restaurant, success: (Restaurant) -> Unit, failure: (Throwable) -> Unit) {
+    fun updateRestaurant(context: Context, restaurant: Restaurant, success: (Restaurant) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
         val restaurantId = restaurant.id ?: 0
+
         service.updateRestaurant(restaurant, restaurantId).enqueue(object : Callback<Restaurant> {
             override fun onResponse(call: Call<Restaurant>, response: Response<Restaurant>) {
                 response.body()?.let { success(it) } ?: failure(Throwable("Response body is null"))
@@ -65,13 +74,35 @@ object RestaurantRepository {
         })
     }
 
-    fun deleteRestaurant(id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
+    fun deleteRestaurant(context: Context, id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
         service.deleteRestaurant(id).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
                 success()
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
+                failure(t)
+            }
+        })
+    }
+
+    fun searchRestaurants(context: Context, filters: Map<String, String?>, success: (List<Restaurant>?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
+        service.searchRestaurants(filters).enqueue(object : Callback<List<Restaurant>> {
+            override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
+                if (response.isSuccessful) {
+                    success(response.body())
+                } else {
+                    failure(Throwable("Error ${response.code()}: ${response.message()}"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
                 failure(t)
             }
         })

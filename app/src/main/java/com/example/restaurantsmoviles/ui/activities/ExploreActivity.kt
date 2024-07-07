@@ -1,13 +1,19 @@
 package com.example.restaurantsmoviles.ui.activities
 
-import RestaurantAdapter
 import android.os.Bundle
+import android.widget.Button
+import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.TimePicker
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.restaurantsmoviles.R
 import com.example.restaurantsmoviles.databinding.ActivityExploreBinding
+import com.example.restaurantsmoviles.ui.adapters.RestaurantAdapter
 import com.example.restaurantsmoviles.ui.viewmodels.ExploreViewModel
 
 class ExploreActivity : AppCompatActivity() {
@@ -39,6 +45,35 @@ class ExploreActivity : AppCompatActivity() {
             }
         })
 
-        viewModel.searchRestaurants()
+        // Abre el diálogo de filtro al hacer clic en el campo de búsqueda
+        binding.searchCity.setOnClickListener {
+            val dialogView = layoutInflater.inflate(R.layout.dialog_filter, null)
+            val cityFilter = dialogView.findViewById<EditText>(R.id.cityFilter)
+            val datePicker = dialogView.findViewById<DatePicker>(R.id.datePicker)
+            val timePicker = dialogView.findViewById<TimePicker>(R.id.timePicker)
+            val applyFilterButton = dialogView.findViewById<Button>(R.id.applyFilterButton)
+
+            val dialog = AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create()
+
+            applyFilterButton.setOnClickListener {
+                val city = cityFilter.text.toString()
+                val date = "${datePicker.year}-${datePicker.month + 1}-${datePicker.dayOfMonth}"
+                val time = "${timePicker.hour}:${timePicker.minute}"
+
+                binding.searchCity.setText(city)
+
+                viewModel.searchRestaurants(this@ExploreActivity, city, date, time)
+
+                dialog.dismiss()
+            }
+
+            dialog.show()
+        }
+
+        // Inicialmente, obtener todos los restaurantes
+        viewModel.searchRestaurants(this)
     }
 }

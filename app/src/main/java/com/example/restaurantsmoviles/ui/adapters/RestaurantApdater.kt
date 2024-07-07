@@ -1,3 +1,5 @@
+package com.example.restaurantsmoviles.ui.adapters
+
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,7 +30,6 @@ class RestaurantAdapter : ListAdapter<Restaurant, RestaurantAdapter.RestaurantVi
             val logoUrl = restaurant.logo
             Log.d("RestaurantViewHolder", "Loading image from URL: $logoUrl")
 
-            // Verifica si logoUrl es nulo o vacío
             if (!logoUrl.isNullOrEmpty()) {
                 Glide.with(binding.root.context)
                     .load(logoUrl)

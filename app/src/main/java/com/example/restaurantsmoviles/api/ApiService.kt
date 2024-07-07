@@ -12,7 +12,7 @@ interface ApiService {
     fun registerUser(@Body user: User): Call<AuthResponse>
 
     @POST("loginuser")
-    fun loginUser(@Body email: String, @Body password: String): Call<AuthResponse>
+    fun loginUser(@Body loginRequest: LoginRequest): Call<AuthResponse>
 
     // Restaurantes
     @POST("restaurants/search")
