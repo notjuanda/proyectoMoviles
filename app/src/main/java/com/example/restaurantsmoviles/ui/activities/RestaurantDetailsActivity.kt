@@ -31,7 +31,7 @@ class RestaurantDetailsActivity : AppCompatActivity() {
             return
         }
 
-        photoAdapter = PhotoAdapter()
+        photoAdapter = PhotoAdapter(this)
         binding.recyclerViewPhotos.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         binding.recyclerViewPhotos.adapter = photoAdapter
 
@@ -44,7 +44,7 @@ class RestaurantDetailsActivity : AppCompatActivity() {
                 binding.textViewCity.text = it.city
                 binding.textViewDescription.text = it.description
                 Glide.with(this).load(it.logo).into(binding.imageViewHeader)
-                photoAdapter.photos = it.photos
+                photoAdapter.setPhotos(it.photos)
             }
         })
 
@@ -54,12 +54,21 @@ class RestaurantDetailsActivity : AppCompatActivity() {
             }
         })
 
+        binding.buttonViewMenu.setOnClickListener {
+            val intent = Intent(this, MenuActivity::class.java).apply {
+                putExtra("RESTAURANT_ID", restaurantId)
+            }
+            startActivity(intent)
+        }
+
         // Configurar el BottomNavigationView
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_search -> {
-                    // Lógica para la navegación de búsqueda
+                    val intent = Intent(this, ExploreActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_reservations -> {
@@ -68,8 +77,6 @@ class RestaurantDetailsActivity : AppCompatActivity() {
                 }
                 R.id.nav_account -> {
                     // Lógica para la navegación de cuenta
-                    //val intent = Intent(this, AccountActivity::class.java)
-                    //startActivity(intent)
                     true
                 }
                 else -> false

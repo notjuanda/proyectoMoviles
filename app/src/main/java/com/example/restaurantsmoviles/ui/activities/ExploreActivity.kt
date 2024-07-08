@@ -87,7 +87,9 @@ class ExploreActivity : AppCompatActivity() {
         bottomNavigationView.setOnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_search -> {
-                    // Lógica para la navegación de búsqueda
+                    val intent = Intent(this, ExploreActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_reservations -> {

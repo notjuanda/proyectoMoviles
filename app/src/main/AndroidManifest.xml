@@ -28,6 +28,9 @@
         <activity android:name=".ui.activities.LoginActivity" />
         <activity android:name=".ui.activities.RegisterActivity" />
         <activity android:name=".ui.activities.RestaurantDetailsActivity" />
+        <activity android:name=".ui.activities.FullScreenImageActivity" />
+        <activity android:name=".ui.activities.MenuActivity" />
+        <activity android:name=".ui.activities.ManageRestaurantsActivity" />
 
     </application>
 

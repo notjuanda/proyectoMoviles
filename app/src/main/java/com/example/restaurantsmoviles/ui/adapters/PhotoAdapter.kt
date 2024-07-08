@@ -1,40 +1,47 @@
 package com.example.restaurantsmoviles.ui.adapters
 
+import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.restaurantsmoviles.databinding.ItemPhotoBinding
 import com.example.restaurantsmoviles.model.Photo
+import com.example.restaurantsmoviles.ui.activities.FullScreenImageActivity
 
-class PhotoAdapter : RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
+class PhotoAdapter(private val context: Context) :
+    RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder>() {
 
-    var photos: List<Photo> = listOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+    private val photoList = mutableListOf<Photo>()
+
+    inner class PhotoViewHolder(val binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
-        val binding = ItemPhotoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemPhotoBinding.inflate(LayoutInflater.from(context), parent, false)
         return PhotoViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        holder.bind(photos[position])
+        val photo = photoList[position]
+        Glide.with(context).load(photo.url).into(holder.binding.imageViewPhoto)
+
+        holder.binding.imageViewPhoto.setOnClickListener {
+            val intent = Intent(context, FullScreenImageActivity::class.java).apply {
+                putExtra("PHOTO_LIST", ArrayList(photoList))
+                putExtra("CURRENT_POSITION", position)
+            }
+            context.startActivity(intent)
+        }
     }
 
     override fun getItemCount(): Int {
-        return photos.size
+        return photoList.size
     }
 
-    class PhotoViewHolder(private val binding: ItemPhotoBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(photo: Photo) {
-            Glide.with(binding.root.context)
-                .load(photo.url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL) // Agrega esta línea para mejorar el rendimiento de la caché
-                .into(binding.imageViewPhoto)
-        }
+    fun setPhotos(photos: List<Photo>) {
+        photoList.clear()
+        photoList.addAll(photos)
+        notifyDataSetChanged()
     }
 }
