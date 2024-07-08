@@ -1,5 +1,6 @@
 package com.example.restaurantsmoviles.api
 
+import android.util.Log
 import com.example.restaurantsmoviles.model.*
 import okhttp3.MultipartBody
 import retrofit2.Call
