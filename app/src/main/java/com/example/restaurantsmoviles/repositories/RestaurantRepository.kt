@@ -61,7 +61,10 @@ object RestaurantRepository {
     fun updateRestaurant(context: Context, restaurant: Restaurant, success: (Restaurant) -> Unit, failure: (Throwable) -> Unit) {
         val retrofit = RetrofitRepository.getRetrofitInstance(context)
         val service: ApiService = retrofit.create(ApiService::class.java)
-        val restaurantId = restaurant.id ?: 0
+        val restaurantId = restaurant.id ?: run {
+            failure(Throwable("Restaurant ID is null"))
+            return
+        }
 
         service.updateRestaurant(restaurant, restaurantId).enqueue(object : Callback<Restaurant> {
             override fun onResponse(call: Call<Restaurant>, response: Response<Restaurant>) {
@@ -94,6 +97,26 @@ object RestaurantRepository {
         val service: ApiService = retrofit.create(ApiService::class.java)
 
         service.searchRestaurants(filters).enqueue(object : Callback<List<Restaurant>> {
+            override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
+                if (response.isSuccessful) {
+                    success(response.body())
+                } else {
+                    failure(Throwable("Error ${response.code()}: ${response.message()}"))
+                }
+            }
+
+            override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
+                failure(t)
+            }
+        })
+    }
+
+    // Método agregado para obtener los restaurantes de un usuario
+    fun getUserRestaurants(context: Context, success: (List<Restaurant>?) -> Unit, failure: (Throwable) -> Unit) {
+        val retrofit = RetrofitRepository.getRetrofitInstance(context)
+        val service: ApiService = retrofit.create(ApiService::class.java)
+
+        service.getUserRestaurants().enqueue(object : Callback<List<Restaurant>> {
             override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
                 if (response.isSuccessful) {
                     success(response.body())

@@ -77,6 +77,9 @@ class RestaurantDetailsActivity : AppCompatActivity() {
                 }
                 R.id.nav_account -> {
                     // Lógica para la navegación de cuenta
+                    val intent = Intent(this, AccountActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 else -> false
