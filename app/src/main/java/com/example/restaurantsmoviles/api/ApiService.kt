@@ -85,6 +85,9 @@ interface ApiService {
     @POST("reservations")
     fun insertReservation(@Body reservation: Reservation): Call<Reservation>
 
+    @POST("reservations/{id}/cancel")
+    fun cancelReservation(@Path("id") id: Int): Call<Void>
+
     @PUT("reservations/{id}")
     fun updateReservation(@Body reservation: Reservation, @Path("id") id: Int): Call<Reservation>
 

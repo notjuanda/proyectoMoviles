@@ -84,11 +84,15 @@ class AccountActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_reservations -> {
-                    // Lógica para la navegación de reservas
+                    val intent = Intent(this, ReservationsActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_account -> {
-                    // Ya estamos en esta pantalla
+                    val intent = Intent(this, AccountActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 else -> false

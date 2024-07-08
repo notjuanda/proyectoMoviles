@@ -9,7 +9,7 @@ data class Restaurant(
     var address: String,
     var city: String,
     var description: String,
-    var logo: String?, // Asegúrate de que este campo coincida con la respuesta de la API
+    var logo: String?, // Campo opcional para logo
     var photos: List<Photo> = listOf() // Usar el nuevo modelo Photo aquí
 ) : Serializable {
     var id: Int? = null

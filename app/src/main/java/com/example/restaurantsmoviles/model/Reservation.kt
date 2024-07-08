@@ -1,11 +1,10 @@
 package com.example.restaurantsmoviles.model
 
+import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
-typealias Reservations = ArrayList<Reservation>
-
 data class Reservation(
-    var restaurantId: Int,
+    @SerializedName("restaurant_id") var restaurantId: Int,
     var date: String,
     var time: String,
     var people: Int,
@@ -15,6 +14,6 @@ data class Reservation(
 }
 
 data class Food(
-    var plateId: Int,
+    @SerializedName("plate_id") var plateId: Int,
     var qty: Int
 ) : Serializable

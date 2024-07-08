@@ -31,6 +31,8 @@
         <activity android:name=".ui.activities.FullScreenImageActivity" />
         <activity android:name=".ui.activities.MenuActivity" />
         <activity android:name=".ui.activities.AccountActivity" />
+        <activity android:name=".ui.activities.ReservationsActivity" />
+        <activity android:name=".ui.activities.ReservationDetailsActivity" />
 
     </application>
 

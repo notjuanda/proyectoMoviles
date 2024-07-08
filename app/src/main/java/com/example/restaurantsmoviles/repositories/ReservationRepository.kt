@@ -54,29 +54,17 @@ object ReservationRepository {
         })
     }
 
-    fun updateReservation(context: Context, reservation: Reservation, success: (Reservation) -> Unit, failure: (Throwable) -> Unit) {
-        val retrofit = RetrofitRepository.getRetrofitInstance(context)
-        val service: ApiService = retrofit.create(ApiService::class.java)
-        val reservationId = reservation.id ?: 0
-
-        service.updateReservation(reservation, reservationId).enqueue(object : Callback<Reservation> {
-            override fun onResponse(call: Call<Reservation>, response: Response<Reservation>) {
-                response.body()?.let { success(it) } ?: failure(Throwable("Response body is null"))
-            }
-
-            override fun onFailure(call: Call<Reservation>, t: Throwable) {
-                failure(t)
-            }
-        })
-    }
-
-    fun deleteReservation(context: Context, id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
+    fun cancelReservation(context: Context, id: Int, success: () -> Unit, failure: (Throwable) -> Unit) {
         val retrofit = RetrofitRepository.getRetrofitInstance(context)
         val service: ApiService = retrofit.create(ApiService::class.java)
 
-        service.deleteReservation(id).enqueue(object : Callback<Void> {
+        service.cancelReservation(id).enqueue(object : Callback<Void> {
             override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                success()
+                if (response.isSuccessful) {
+                    success()
+                } else {
+                    failure(Throwable("Failed to cancel reservation"))
+                }
             }
 
             override fun onFailure(call: Call<Void>, t: Throwable) {
