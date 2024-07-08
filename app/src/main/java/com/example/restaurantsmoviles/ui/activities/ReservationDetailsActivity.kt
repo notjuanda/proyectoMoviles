@@ -4,13 +4,14 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.example.restaurantsmoviles.databinding.ActivityReservationDetailsBinding
-import com.example.restaurantsmoviles.ui.viewmodels.ReservationViewModel
+import com.example.restaurantsmoviles.ui.viewmodels.ReservationDetailViewModel
 
 class ReservationDetailsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReservationDetailsBinding
-    private val viewModel: ReservationViewModel by viewModels()
+    private val viewModel: ReservationDetailViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,15 +25,18 @@ class ReservationDetailsActivity : AppCompatActivity() {
             return
         }
 
-        viewModel.getReservation(this, reservationId)
+        viewModel.getReservationDetail(this, reservationId)
 
         viewModel.reservation.observe(this, { reservation ->
             reservation?.let {
                 binding.textViewDate.text = "Fecha: ${it.date}"
                 binding.textViewTime.text = "Hora: ${it.time}"
                 binding.textViewPeople.text = "Número de Personas: ${it.people}"
-                val foodDetails = it.food?.joinToString("\n") { food -> "Plato ID: ${food.plateId}, Cantidad: ${food.qty}" }
-                binding.textViewFood.text = "Platos: \n${foodDetails ?: "Ninguno"}"
+                binding.textViewStatus.text = "Estado: ${it.status ?: "Desconocido"}"
+                binding.textViewRestaurantName.text = it.restaurant?.name ?: "Nombre del restaurante no disponible"
+                Glide.with(this)
+                    .load(it.restaurant?.logo)
+                    .into(binding.imageViewRestaurantLogo)
             }
         })
 
@@ -42,11 +46,7 @@ class ReservationDetailsActivity : AppCompatActivity() {
             }
         })
 
-        binding.buttonCancelReservation.setOnClickListener {
-            viewModel.cancelReservation(this, reservationId)
-        }
-
-        viewModel.cancelReservationResponse.observe(this, { success ->
+        viewModel.cancelResponse.observe(this, { success ->
             if (success) {
                 Toast.makeText(this, "Reserva cancelada con éxito", Toast.LENGTH_LONG).show()
                 finish()

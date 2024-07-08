@@ -7,7 +7,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-object ReservationRepository {
+object  ReservationRepository {
 
     fun getReservationList(context: Context, success: (List<Reservation>?) -> Unit, failure: (Throwable) -> Unit) {
         val retrofit = RetrofitRepository.getRetrofitInstance(context)
@@ -72,4 +72,5 @@ object ReservationRepository {
             }
         })
     }
+
 }

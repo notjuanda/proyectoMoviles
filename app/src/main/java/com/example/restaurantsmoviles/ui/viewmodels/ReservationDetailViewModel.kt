@@ -1,4 +1,3 @@
-// src/main/java/com/example/restaurantsmoviles/ui/viewmodels/ReservationDetailViewModel.kt
 package com.example.restaurantsmoviles.ui.viewmodels
 
 import android.content.Context
@@ -23,17 +22,6 @@ class ReservationDetailViewModel : ViewModel() {
         ReservationRepository.getReservation(context, reservationId,
             success = { reservation ->
                 _reservation.value = reservation
-            },
-            failure = { throwable ->
-                _errorMessage.value = throwable.message
-            }
-        )
-    }
-
-    fun cancelReservation(context: Context, reservationId: Int) {
-        ReservationRepository.cancelReservation(context, reservationId,
-            success = {
-                _cancelResponse.value = true
             },
             failure = { throwable ->
                 _errorMessage.value = throwable.message

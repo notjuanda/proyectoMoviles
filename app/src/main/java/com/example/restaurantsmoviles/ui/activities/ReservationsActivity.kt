@@ -1,4 +1,3 @@
-// src/main/java/com/example/restaurantsmoviles/ui/activities/ReservationsActivity.kt
 package com.example.restaurantsmoviles.ui.activities
 
 import android.content.Intent
@@ -26,7 +25,7 @@ class ReservationsActivity : AppCompatActivity() {
         binding.recyclerViewReservations.layoutManager = LinearLayoutManager(this)
 
         viewModel.reservations.observe(this, { reservations ->
-            val adapter = ReservationAdapter(reservations) { reservation ->
+            val adapter = ReservationAdapter(this, reservations) { reservation ->
                 val intent = Intent(this, ReservationDetailsActivity::class.java)
                 intent.putExtra("RESERVATION_ID", reservation.id)
                 startActivity(intent)
@@ -54,7 +53,9 @@ class ReservationsActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_reservations -> {
-                    // Ya estamos en esta pantalla
+                    val intent = Intent(this, ReservationsActivity::class.java)
+                    startActivity(intent)
+                    finish()
                     true
                 }
                 R.id.nav_account -> {

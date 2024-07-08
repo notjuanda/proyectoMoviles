@@ -56,16 +56,4 @@ class ReservationViewModel : ViewModel() {
             }
         )
     }
-
-    fun cancelReservation(context: Context, id: Int) {
-        ReservationRepository.cancelReservation(context, id,
-            success = {
-                _cancelReservationResponse.value = true
-            },
-            failure = { throwable ->
-                _errorMessage.value = throwable.message
-                _cancelReservationResponse.value = false
-            }
-        )
-    }
 }

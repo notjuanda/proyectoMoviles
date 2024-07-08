@@ -1,23 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="8dp"
     app:cardElevation="4dp">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
         android:padding="16dp">
+
+        <ImageView
+            android:id="@+id/imageViewRestaurantLogo"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewRestaurantName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:text="Restaurante: "
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewRestaurantLogo"
+            app:layout_constraintTop_toTopOf="@id/imageViewRestaurantLogo" />
 
         <TextView
             android:id="@+id/textViewReservationDetails"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="30dp"
+            android:text="Reserva para X personas el YYYY-MM-DD a las HH:MM"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewRestaurantLogo"
+            app:layout_constraintTop_toBottomOf="@id/textViewRestaurantName" />
+
+        <TextView
+            android:id="@+id/textViewReservationStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:paddingLeft="30dp"
+            android:text="Estado: "
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imageViewRestaurantLogo"
+            app:layout_constraintTop_toBottomOf="@id/textViewReservationDetails" />
+
+        <Button
+            android:id="@+id/buttonCancelReservation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:textColor="@android:color/black" />
-    </LinearLayout>
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="108dp"
+            android:backgroundTint="#C6EAFC"
+            android:text="Cancelar Reserva"
+            android:textColor="@color/black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textViewReservationStatus" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
+
