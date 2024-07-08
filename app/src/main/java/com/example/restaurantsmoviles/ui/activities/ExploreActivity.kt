@@ -1,5 +1,6 @@
 package com.example.restaurantsmoviles.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.DatePicker
@@ -15,6 +16,7 @@ import com.example.restaurantsmoviles.R
 import com.example.restaurantsmoviles.databinding.ActivityExploreBinding
 import com.example.restaurantsmoviles.ui.adapters.RestaurantAdapter
 import com.example.restaurantsmoviles.ui.viewmodels.ExploreViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ExploreActivity : AppCompatActivity() {
 
@@ -27,7 +29,11 @@ class ExploreActivity : AppCompatActivity() {
         binding = ActivityExploreBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        restaurantAdapter = RestaurantAdapter()
+        restaurantAdapter = RestaurantAdapter { restaurant ->
+            val intent = Intent(this, RestaurantDetailsActivity::class.java)
+            intent.putExtra("RESTAURANT_ID", restaurant.id)
+            startActivity(intent)
+        }
         binding.recyclerViewRestaurants.apply {
             layoutManager = LinearLayoutManager(this@ExploreActivity)
             adapter = restaurantAdapter
@@ -75,5 +81,27 @@ class ExploreActivity : AppCompatActivity() {
 
         // Inicialmente, obtener todos los restaurantes
         viewModel.searchRestaurants(this)
+
+        // Configurar el BottomNavigationView
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_search -> {
+                    // Lógica para la navegación de búsqueda
+                    true
+                }
+                R.id.nav_reservations -> {
+                    // Lógica para la navegación de reservas
+                    true
+                }
+                R.id.nav_account -> {
+                    // Lógica para la navegación de cuenta
+                    //val intent = Intent(this, AccountActivity::class.java)
+                    //startActivity(intent)
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }
